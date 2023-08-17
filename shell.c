@@ -24,29 +24,17 @@ void shell(char *src)
 	{
 		printf("($) ");
 		if (getline(&cmd, &size, stdin) == -1 || cmd == NULL)
-		{
-			perror(src);
-			free(cmd);
-			exit(EXIT_FAILURE);
-		}
+			sherror(src, cmd);
 		cmd[strcspn(cmd, "\n")] = '\0';
 		argv[0] = strtok(cmd, " ");
 		argv[1] = NULL;
 		child = fork();
 		if (child == -1)
-		{
-			perror(src);
-			free(cmd);
-			exit(EXIT_FAILURE);
-		}
+			sherror(src, cmd);
 		if (child == 0)
 		{
 			if (execve(argv[0], argv, NULL) == -1)
-			{
-				perror(src);
-				free(cmd);
-				exit(EXIT_FAILURE);
-			}
+				sherror(src, cmd);
 		}
 		else
 		{
