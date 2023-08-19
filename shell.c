@@ -6,12 +6,6 @@
 #include <string.h>
 #include "main.h"
 
-/**
- * shell - function that executes the shell
- * @src: executing file
- *
- * Return: no return value
- */
 void shell(char *src)
 {
 	pid_t child;
@@ -19,12 +13,18 @@ void shell(char *src)
 	size_t size = 0;
 	char *cmd = NULL;
 	char *argv[2];
-
+	char prompt[] = "($) ";
+	int inter = isatty(STDIN_FILENO);
 	while (1)
 	{
-		printf("($) ");
-		if (getline(&cmd, &size, stdin) == -1 || cmd == NULL)
+		if (inter == 1)
+			write(1, prompt, sizeof(prompt) - 1);
+		if (getline(&cmd, &size, stdin) == -1)
+			break;
+		if (cmd == NULL)
 			sherror(src, cmd);
+		if (strcmp(cmd, "\n") == 0)
+			continue;
 		cmd[strcspn(cmd, "\n")] = '\0';
 		argv[0] = strtok(cmd, " ");
 		argv[1] = NULL;
