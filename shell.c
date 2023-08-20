@@ -23,7 +23,7 @@ void shell(char *src)
 			break;
 		if (cmd == NULL)
 			sherror(src, cmd);
-		if (strcmp(cmd, "\n") == 0)
+		if (_strcmp(cmd, "\n") == 0)
 			continue;
 		cmd[strcspn(cmd, "\n")] = '\0';
 		argv[0] = strtok(cmd, " ");
