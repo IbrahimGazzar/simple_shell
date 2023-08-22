@@ -1,7 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-
 void shell(char *src);
 void sherror(char *src, char *str, char **strarr);
 void strfree(char *str, char **strarr);
