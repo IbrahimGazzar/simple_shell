@@ -7,5 +7,6 @@ void strfree(char *str, char **strarr);
 int _strcmp(char *s1, char *s2);
 void strtrm(char *cmd);
 char **cmd_args(char *cmd);
+char *_strcpy(char *dest, char *src);
 
 #endif
