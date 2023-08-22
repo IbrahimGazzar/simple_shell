@@ -10,6 +10,7 @@
 
 int _strcmp(char *s1, char *s2)
 {
+<<<<<<< HEAD
 	while (*s1 == *s2)
 	{
 		if (*s1 == '\0')
@@ -18,4 +19,14 @@ int _strcmp(char *s1, char *s2)
 		s2++;
 	}
 	return ((*s1 < *s2) ? -1 : 1);
+=======
+ while (*s1 == *s2)
+ {
+  if (*s1 == '\0')
+   return (0);
+  s1++;
+  s2++;
+ }
+ return ((*s1 < *s2) ? -1 : 1);
+>>>>>>> 9bf08c9edeecfd4a131b418970937aa87d176fd7
 }
