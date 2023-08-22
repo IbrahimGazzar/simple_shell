@@ -17,6 +17,6 @@ int main(int argc, char **argv)
 {
 	if (argc != 1)
 		exit(97);
-	shell(argv[0]);
+        shell(argv[0]);
 	return (0);
 }
