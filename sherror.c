@@ -1,23 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <string.h>
 #include "main.h"
 
 /**
- * sherror - print error message and exit process
- * @src: exe file name
- * @str: string to be freed
+ * strfree - frees strings as necessary
+ * @str: corresponds to 'cmd' from shell
+ * @strarr: corresponds to 'argv' from shell
  *
  * Return: no return value
  */
-
-void sherror(char *src, char *str)
+void strfree(char *str, char **strarr)
 {
- if (str != NULL)
-  free(str);
- perror(src);
- exit(EXIT_FAILURE);
+	free(str);
+	free(strarr);
+}
+/**
+ * sherror - handles errors
+ * @src: name of source file
+ * @str: corresponds to 'cmd' from shell
+ * @strarr: corresponds to 'argv' from shell
+ *
+ * Return: no return value
+ */
+void sherror(char *src, char *str, char **strarr)
+{
+	strfree(str, strarr);
+	perror(src);
+	exit(EXIT_FAILURE);
 }
