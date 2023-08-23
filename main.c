@@ -13,10 +13,10 @@
  *
  * Return: always 0
  */
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
 	if (argc != 1)
 		exit(97);
-        shell(argv[0]);
+        shell(argv[0], env);
 	return (0);
 }

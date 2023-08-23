@@ -6,7 +6,7 @@
 #include <string.h>
 #include "main.h"
 
-void shell(char *src)
+void shell(char *src, char **env)
 {
 	pid_t child;
 	int papa;
@@ -34,18 +34,31 @@ void shell(char *src)
 		argv = cmd_args(cmd);
 		if (argv == NULL)
 			return;
-		child = fork();
-		if (child == -1)
-			sherror(src, cmd, argv);
-		if (child == 0)
+		if (path_handle(argv) == 0)
 		{
-			if (execve(argv[0], argv, NULL) == -1)
-				sherror(src, cmd, argv);
+			strfree(cmd, argv);
+			continue;
 		}
 		else
 		{
-			wait(&papa);
-			strfree(cmd, argv);
+			if (access(argv[0], F_OK) == -1)
+			{
+				perror(src);
+				continue;
+			}
+			child = fork();
+			if (child == -1)
+				sherror(src, cmd, argv);
+			if (child == 0)
+			{
+				if (execve(argv[0], argv, env) == -1)
+					sherror(src, cmd, argv);
+			}
+			else
+			{
+				wait(&papa);
+				strfree(cmd, argv);
+			}
 		}
 	}
 }

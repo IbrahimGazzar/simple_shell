@@ -26,5 +26,5 @@ void sherror(char *src, char *str, char **strarr)
 {
 	strfree(str, strarr);
 	perror(src);
-	exit (EXIT_FAILURE);
+	exit(EXIT_FAILURE);
 }
