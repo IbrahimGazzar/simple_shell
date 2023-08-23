@@ -5,27 +5,70 @@
 #include <sys/wait.h>
 #include <string.h>
 #include "main.h"
+/**
+ * get_cmd - get input from standard input
+ * @cmd: string to hole the input
+ * @argv: argument array
+ *
+ * Return: input after cleaning
+ */
+char *get_cmd(char *cmd, char **argv)
+{
+	size_t size = 0;
+	int inter = isatty(STDIN_FILENO);
 
-void shell(char *src, char **env)
+	if (inter == 1)
+		write(1, "($) ", sizeof("($) ") - 1);
+	if (getline(&cmd, &size, stdin) == -1)
+	{
+		strfree(cmd, argv);
+		exit(EXIT_SUCCESS);
+	}
+	return (cmd);
+}
+/**
+ * wtht_path - executes code when handle path fails
+ * @src: source file name
+ * @cmd: command line string
+ * @argv: argument list
+ *
+ * Return: no return value
+ */
+void wtht_path(char *src, char *cmd, char **argv)
 {
 	pid_t child;
-	int papa;
-	size_t size = 0;
-	char *cmd = NULL;
-	char **argv = NULL;
-	char prompt[] = "($) ";
-	int inter = isatty(STDIN_FILENO);
-	while (1)
+
+	child = fork();
+	if (child == -1)
+		sherror(src, cmd, argv);
+	if (child == 0)
+	{
+		if (execve(argv[0], argv, NULL) == -1)
+			sherror(src, cmd, argv);
+	}
+	else
+	{
+		wait(NULL);
+		strfree(cmd, argv);
+	}
+}
+/**
+ * shell - function that executes the shell
+ * @src: name of the source file
+ * @env: array containing enviroment strings
+ * @interrupted: flag that detects interrupts
+ *
+ * Return: no return value
+ */
+void shell(char *src, char **env, sig_atomic_t *interrupted)
+{
+	char *cmd = NULL, **argv = NULL;
+
+	while (!(*interrupted))
 	{
 		cmd = NULL;
 		argv = NULL;
-		if (inter == 1)
-			write(1, prompt, sizeof(prompt) - 1);
-		if (getline(&cmd, &size, stdin) == -1)
-		{
-			strfree(cmd, argv);
-		        exit(EXIT_SUCCESS);
-		}
+		cmd = get_cmd(cmd, argv);
 		if (cmd == NULL)
 			sherror(src, cmd, argv);
 		if (_strcmp(cmd, "\n") == 0)
@@ -34,7 +77,7 @@ void shell(char *src, char **env)
 		argv = cmd_args(cmd);
 		if (argv == NULL)
 			return;
-		if (path_handle(argv) == 0)
+		if (path_handle(argv, env) == 0)
 		{
 			strfree(cmd, argv);
 			continue;
@@ -47,19 +90,9 @@ void shell(char *src, char **env)
 				perror(src);
 				continue;
 			}
-			child = fork();
-			if (child == -1)
-				sherror(src, cmd, argv);
-			if (child == 0)
-			{
-				if (execve(argv[0], argv, env) == -1)
-					sherror(src, cmd, argv);
-			}
-			else
-			{
-				wait(&papa);
-				strfree(cmd, argv);
-			}
+			wtht_path(src, cmd, argv);
 		}
 	}
+	strfree(cmd, argv);
+	(void)env;
 }

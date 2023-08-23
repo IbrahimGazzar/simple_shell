@@ -15,7 +15,7 @@ void strfree(char *str, char **strarr)
 	free(strarr);
 }
 /**
- * sherror: handles errors
+ * sherror - handles errors
  * @src: name of source file
  * @str: corresponds to 'cmd' from shell
  * @strarr: corresponds to 'argv' from shell

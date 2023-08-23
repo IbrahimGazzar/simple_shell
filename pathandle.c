@@ -9,20 +9,16 @@
 /**
  * path_handle - allow commands to execute with full path
  * @args: arguements passed to the shell
- *
+ * @env: array of enviromental variables
  * Return: 0 on success, 1 on error
  */
-int path_handle(char **args)
+int path_handle(char **args, char **env)
 {
-	char **dirs;
-	char *real_path, *vari;
-	int i = 0;
+	char *vari = malloc(sizeof(char) * 1600), **dirs = get_path(vari, env);
+	char *real_path = malloc(sizeof(char) * 100);
+	int i = 0, status;
 	pid_t child;
-	int status;
 
-	vari = malloc(sizeof(char) * 1600);
-	dirs = get_path(vari);
-	real_path = malloc(sizeof(char) * 100);
 	while (dirs[i] != NULL)
 	{
 		if (real_path == NULL)
@@ -56,7 +52,6 @@ int path_handle(char **args)
 	{
 		waitpid(child, &status, 0);
 		free(real_path);
-		return (WIFEXITED(status) ? WEXITSTATUS(status) : 1);
 	}
-	return (0);
+	return (WIFEXITED(status) ? WEXITSTATUS(status) : 1);
 }
