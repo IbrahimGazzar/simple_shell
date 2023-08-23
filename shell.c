@@ -43,6 +43,7 @@ void shell(char *src, char **env)
 		{
 			if (access(argv[0], F_OK) == -1)
 			{
+				strfree(cmd, argv);
 				perror(src);
 				continue;
 			}

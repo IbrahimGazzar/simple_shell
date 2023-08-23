@@ -9,7 +9,7 @@ void strtrm(char *cmd);
 char **cmd_args(char *cmd);
 char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);
-char **get_path();
+char **get_path(char *vari);
 int path_handle(char **args);
 
 #endif

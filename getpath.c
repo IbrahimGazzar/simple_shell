@@ -9,25 +9,18 @@
  *
  * Return: array containing directories to check
  */
-char **get_path()
+char **get_path(char *vari)
 {
 	extern char **environ;
 	int i;
-	char *vari;
 	char *token = NULL;
 	char **dirs = malloc(sizeof(char *) * 50);
 
 	if (dirs == NULL)
 		return (NULL);
-	vari = malloc(sizeof(char) * 1600);
-	if (vari == NULL)
-	{
-		free(dirs);
-		return (NULL);
-	}
 	for (i = 0; environ[i] != 0; i++)
 	{
-		_strcpy(vari, environ[i]);
+		vari = _strcpy(vari, environ[i]);
 		vari = strtok(vari, "=");
 		if (_strcmp(vari, "PATH") == 0)
 			break;

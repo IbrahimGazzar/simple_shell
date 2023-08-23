@@ -15,12 +15,13 @@
 int path_handle(char **args)
 {
 	char **dirs;
-	char *real_path;
+	char *real_path, *vari;
 	int i = 0;
 	pid_t child;
 	int status;
 
-	dirs = get_path();
+	vari = malloc(sizeof(char) * 1600);
+	dirs = get_path(vari);
 	real_path = malloc(sizeof(char) * 100);
 	while (dirs[i] != NULL)
 	{
@@ -34,8 +35,12 @@ int path_handle(char **args)
 		i++;
 	}
 	free(dirs);
-	if (real_path == NULL)
+	free(vari);
+	if (real_path == NULL || access(real_path, F_OK) == -1)
+	{
+		free(real_path);
 		return (1);
+	}
 	child = fork();
 	if (child == -1)
 		return (1);
